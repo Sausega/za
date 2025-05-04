@@ -162,17 +162,17 @@ async def on_message(message):
                 if hasattr(message.channel, "is_nsfw") and callable(message.channel.is_nsfw) and message.channel.is_nsfw():
                     # NSFW channel configuration
                     safety_settings_local = [
-                        {"category": "HARM_CATEGORY_HARASSMENT", "threshold": "BLOCK_NONE"},
-                        {"category": "HARM_CATEGORY_HATE_SPEECH", "threshold": "BLOCK_NONE"},
-                        {"category": "HARM_CATEGORY_SEXUALLY_EXPLICIT", "threshold": "BLOCK_NONE"}, # Less restrictive
+                        {"category": "HARM_CATEGORY_HARASSMENT", "threshold": "BLOCK_ONLY_HIGH"},
+                        {"category": "HARM_CATEGORY_HATE_SPEECH", "threshold": "BLOCK_ONLY_HIGH"},
+                        {"category": "HARM_CATEGORY_SEXUALLY_EXPLICIT", "threshold": "BLOCK_ONLY_HIGH"}, # Less restrictive
                         {"category": "HARM_CATEGORY_DANGEROUS_CONTENT", "threshold": "BLOCK_ONLY_HIGH"}, # Less restrictive
                     ]
                     print("Using NSFW safety settings.")
                 else:
                     # Non-NSFW channel configuration (use defaults or specific non-NSFW)
                     safety_settings_local = [
-                        {"category": "HARM_CATEGORY_HARASSMENT", "threshold": "BLOCK_NONE"},
-                        {"category": "HARM_CATEGORY_HATE_SPEECH", "threshold": "BLOCK_NONE"},
+                        {"category": "HARM_CATEGORY_HARASSMENT", "threshold": "BLOCK_ONLY_HIGH"},
+                        {"category": "HARM_CATEGORY_HATE_SPEECH", "threshold": "BLOCK_ONLY_HIGH"},
                         {"category": "HARM_CATEGORY_SEXUALLY_EXPLICIT", "threshold": "BLOCK_MEDIUM_AND_ABOVE"}, # More restrictive
                         {"category": "HARM_CATEGORY_DANGEROUS_CONTENT", "threshold": "BLOCK_MEDIUM_AND_ABOVE"}, # More restrictive
                     ]
@@ -195,18 +195,18 @@ async def on_message(message):
                 if len(response.text) == 0:
                     await message.channel.send("I received an empty response.")
                 else:
-                    # Split into chunks of 2000 characters, trying to break at newlines when possible
+                    # Split into chunks of 1999 characters, trying to break at newlines when possible
                     chunks = []
                     text = response.text
                     while text:
-                        if len(text) <= 2000:
+                        if len(text) <= 1999:
                             chunks.append(text)
                             break
                         
                         # Try to find a newline to split at
-                        split_point = text[:2000].rfind('\n')
+                        split_point = text[:1999].rfind('\n')
                         if split_point == -1:  # No newline found, just split at 2000
-                            split_point = 2000
+                            split_point = 1999
 
                         chunks.append(text[:split_point])
                         text = text[split_point:].lstrip()  # Remove leading whitespace from next chunk
